@@ -1,0 +1,16 @@
+dubbo:
+  application:
+    name: moon-dubbo-provider # 服务名
+    id: moon-dubbo-provider
+  registry:
+    address: zookeeper://192.168.1.102:12181 # 注册中心地址
+  protocol:
+    name: dubbo # 指定通信协议
+    port: 20880 # 通信端口  这里指的是与消费者间的通信协议与端口
+  provider:
+    timeout: 10000 # 配置全局调用服务超时时间，dubbo默认是1s，肯定不够用呀
+    retries: 3 # 重试3次
+    delay: -1
+
+service:
+  version: 1.0.0
