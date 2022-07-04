@@ -1,0 +1,2 @@
+redis = com.peter.moon.dubbo.provider.service.impl.RedisDiscoveryServiceImpl
+zookeeper = com.peter.moon.dubbo.provider.service.impl.ZookeeperDiscoveryServiceImpl

@@ -4,5 +4,6 @@ plugins {
 
 
 dependencies {
+    implementation project(':moon-dubbo-common')
     implementation project(':moon-dubbo-service')
 }

@@ -1,7 +1,7 @@
 dubbo:
   application:
-    name: moon-dubbo-provider # 服务名
-    id: moon-dubbo-provider
+    name: moon-dubbo-provider2 # 服务名
+    id: moon-dubbo-provider2
   registry:
     address: zookeeper://192.168.1.102:12181 # 注册中心地址
   protocol:
@@ -14,3 +14,23 @@ dubbo:
 
 service:
   version: 1.0.0
+
+spring:
+  kafka:
+    bootstrap-servers: 192.168.1.102:19092  #bootstrap-servers：连接kafka的地址，多个地址用逗号分隔
+    consumer:
+      group-id: myGroup
+      enable-auto-commit: true
+      auto-commit-interval: 100ms
+      properties:
+        session.timeout.ms: 15000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      auto-offset-reset: earliest
+
+elasticsearch:
+  host: 192.168.1.102
+  port: 19205
+  connTimeout: 3000
+  socketTimeout: 5000
+  connectionRequestTimeout: 5000
