@@ -61,7 +61,7 @@ allprojects {
         implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.3.0'
 
 //        implementation 'org.springframework.kafka:spring-kafka:2.5.17.RELEASE'
-        implementation 'org.springframework.kafka:spring-kafka:2.8.7'
+//        implementation 'org.springframework.kafka:spring-kafka:2.8.7'
 
 
         implementation 'com.caucho:hessian:4.0.66'

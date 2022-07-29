@@ -7,4 +7,6 @@ dependencies {
     implementation project(':moon-dubbo-common')
     implementation project(':moon-dubbo-service')
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.1'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation group: 'org.apache.rocketmq', name: 'rocketmq-client', version: '4.7.0'
 }

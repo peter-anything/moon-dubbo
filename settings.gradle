@@ -3,4 +3,5 @@ include 'moon-dubbo-common'
 include 'moon-dubbo-consumer'
 include 'moon-dubbo-provider'
 include 'moon-dubbo-service'
+include 'moon-dubbo-demo'
 
