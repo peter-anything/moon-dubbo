@@ -14,8 +14,8 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class MessageListenerHandler implements MessageListenerConcurrently {
-    private static String TOPIC = "DemoTopic";
+public class TransactionMessageListenerHandler implements MessageListenerConcurrently {
+    private static String TOPIC = "TransactionDemoTopic";
 
     @Override
     public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
@@ -34,7 +34,7 @@ public class MessageListenerHandler implements MessageListenerConcurrently {
     }
 
     private void mockConsume(D2RMessage msg){
-        System.out.println(String.format("receive msg: {}.", msg));
-        log.info("receive msg: {}.", msg);
+        System.out.println(String.format("receive msg1: {}.", msg));
+        log.info("receive msg1: {}.", msg);
     }
 }

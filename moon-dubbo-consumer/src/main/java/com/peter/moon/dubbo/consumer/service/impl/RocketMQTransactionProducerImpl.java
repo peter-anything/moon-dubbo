@@ -3,36 +3,32 @@ package com.peter.moon.dubbo.consumer.service.impl;
 import com.peter.moon.dubbo.common.dto.D2RMessage;
 import com.peter.moon.dubbo.common.serializer.hessian.HessianSerializer;
 import com.peter.moon.dubbo.consumer.service.MoonKafkaProducer;
+import com.peter.moon.dubbo.consumer.service.TransactionProducer;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RocketMQProducerImpl implements MoonKafkaProducer {
-    private static String TOPIC = "DemoTopic";
-    private static String TAGS = "glmapperTags";
+public class RocketMQTransactionProducerImpl implements TransactionProducer {
+    private static String TOPIC = "TransactionDemoTopic";
+    private static String TAGS = "transactionGlmapperTags";
 
     @Autowired
-    private DefaultMQProducer defaultMQProducer;
+    private TransactionMQProducer transactionMQProducer;
     @Override
     public void send(D2RMessage msg) {
         Message sendMsg = new Message(TOPIC, TAGS, new HessianSerializer().serialize(msg));
             SendCallback sendCallback = new D2rCallback(System.currentTimeMillis(), msg.getMessageId(), msg);
         try {
-            defaultMQProducer.send(sendMsg);
+            transactionMQProducer.sendMessageInTransaction(sendMsg, 1);
         } catch (MQClientException e) {
-            e.printStackTrace();
-        } catch (RemotingException e) {
-            e.printStackTrace();
-        } catch (MQBrokerException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

@@ -1,6 +1,7 @@
 package com.peter.moon.dubbo.consumer.config;
 
 import com.peter.moon.dubbo.consumer.handler.MessageListenerHandler;
+import com.peter.moon.dubbo.consumer.handler.TransactionMessageListenerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -34,8 +35,10 @@ public class RocketMQConsumerConfig {
     @Autowired
     private MessageListenerHandler mqMessageListenerProcessor;
 
+    @Autowired
+    private TransactionMessageListenerHandler transactionMessageListenerHandler;
+
     @Bean
-    @ConditionalOnMissingBean
     public DefaultMQPushConsumer defaultMQPushConsumer() throws RuntimeException {
 
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(groupName);
@@ -55,6 +58,38 @@ public class RocketMQConsumerConfig {
         try {
             // 设置该消费者订阅的主题和tag，如果是订阅该主题下的所有tag，使用*；
             consumer.subscribe(topics, "*");
+            // 启动消费
+            consumer.start();
+            log.info("consumer is started. groupName:{}, topics:{}, namesrvAddr:{}",groupName,topics,namesrvAddr);
+
+        } catch (Exception e) {
+            log.error("failed to start consumer . groupName:{}, topics:{}, namesrvAddr:{}",groupName,topics,namesrvAddr,e);
+            throw new RuntimeException(e);
+        }
+        return consumer;
+    }
+
+
+    @Bean
+    public DefaultMQPushConsumer defaultTransactionMQPushConsumer() throws RuntimeException {
+
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("transactionConsumer");
+        consumer.setNamesrvAddr(namesrvAddr);
+        consumer.setConsumeThreadMin(consumeThreadMin);
+        consumer.setConsumeThreadMax(consumeThreadMax);
+        consumer.registerMessageListener(transactionMessageListenerHandler);
+
+        // 设置 consumer 第一次启动是从队列头部开始消费还是队列尾部开始消费
+        // 如果非第一次启动，那么按照上次消费的位置继续消费
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        // 设置消费模型，集群还是广播，默认为集群
+        consumer.setMessageModel(MessageModel.CLUSTERING);
+        // 设置一次消费消息的条数，默认为 1 条
+        consumer.setConsumeMessageBatchMaxSize(consumeMessageBatchMaxSize);
+
+        try {
+            // 设置该消费者订阅的主题和tag，如果是订阅该主题下的所有tag，使用*；
+            consumer.subscribe("TransactionDemoTopic", "*");
             // 启动消费
             consumer.start();
             log.info("consumer is started. groupName:{}, topics:{}, namesrvAddr:{}",groupName,topics,namesrvAddr);
